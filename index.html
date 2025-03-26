@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>F1 Drivers & Track Times</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            padding: 20px;
+        }
+        canvas {
+            background: white;
+            max-width: 90%;
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>F1 Drivers & Track Times</h1>
+    <canvas id="f1Chart"></canvas>
+    <script>
+        const tracks = ["Monza", "Silverstone", "Monaco", "Suzuka", "Spa", "Bahrain", "Hungaroring", "Barcelona", "Imola", "Zandvoort", 
+            "Shanghai", "Austin", "Jeddah", "Miami", "Melbourne", "Baku", "Singapore", "Las Vegas", "Losail", "Abu Dhabi", 
+            "Canada", "Austria", "Mexico", "Brazil"];
+        
+        const drivers = ["Max Verstappen", "Lewis Hamilton", "Charles Leclerc", "Fernando Alonso", "Lando Norris", "Sergio Perez", 
+            "George Russell", "Carlos Sainz", "Esteban Ocon", "Pierre Gasly", "Valtteri Bottas", "Kevin Magnussen", 
+            "Nico Hulkenberg", "Yuki Tsunoda", "Zhou Guanyu", "Lance Stroll", "Alex Albon", "Logan Sargeant", "Oscar Piastri", "Daniel Ricciardo"];
+        
+        const data = [];
+        drivers.forEach(driver => {
+            tracks.forEach(track => {
+                data.push({ driver, track, time: (Math.random() * (110 - 70) + 70).toFixed(3) });
+            });
+        });
+        
+        const ctx = document.getElementById('f1Chart').getContext('2d');
+        const chartData = {
+            datasets: drivers.map((driver, index) => ({
+                label: driver,
+                data: data.filter(d => d.driver === driver).map(d => ({ x: tracks.indexOf(d.track), y: d.time })),
+                backgroundColor: `hsl(${index * 18}, 70%, 50%)`
+            }))
+        };
+        
+        new Chart(ctx, {
+            type: 'scatter',
+            data: chartData,
+            options: {
+                responsive: true,
+                scales: {
+                    x: { type: 'linear', position: 'bottom', ticks: { callback: (value) => tracks[value] } },
+                    y: { title: { display: true, text: 'Best Time (s)' } }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
